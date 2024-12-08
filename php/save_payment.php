@@ -31,6 +31,6 @@ $data[$pageSource][] = $newPayment;
 file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT));
 
 // Rediriger vers index.html après le traitement
-header('Location: ../pages/index.html');
+header('Location: ../index.html');
 exit();
 ?>
