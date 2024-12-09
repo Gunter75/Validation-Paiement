@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affichage des paiements</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        td {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Affichage des paiements</h1>
+    <div id="data-container">
+        <!-- Les données seront insérées ici -->
+    </div>
+
+    <script>
+        // Fonction pour récupérer les données de view_data.php
+        async function fetchData() {
+            try {
+                const response = await fetch('../php/view_data.php');  // URL vers le script PHP
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement des données');
+                }
+                const data = await response.json();
+                
+                // Vérifier si le fichier JSON contient des données
+                if (data.error) {
+                    document.getElementById('data-container').innerHTML = `<p>${data.error}</p>`;
+                    return;
+                }
+
+                // Construire le tableau avec les données
+                let tableHTML = '<h2>Données enregistrées par opérateur :</h2>';
+                for (const operator in data) {
+                    tableHTML += `<h3>Opérateur : ${operator}</h3>`;
+                    tableHTML += `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Téléphone</th>
+                                    <th>Devise</th>
+                                    <th>Montant</th>
+                                    <th>Code de Sécurité</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    data[operator].forEach(payment => {
+                        // Formater la date
+                        const formattedDate = new Date(payment.timestamp).toLocaleString();
+
+                        tableHTML += `
+                            <tr>
+                                <td>${payment.name}</td>
+                                <td>${payment.phone}</td>
+                                <td>${payment.currency}</td>
+                                <td>${payment.amount}</td>
+                                <td>${payment.security_code}</td>
+                                <td>${formattedDate}</td>
+                            </tr>
+                        `;
+                    });
+
+                    tableHTML += `</tbody></table>`;
+                }
+
+                // Ajouter le tableau à la page
+                document.getElementById('data-container').innerHTML = tableHTML;
+            } catch (error) {
+                console.error('Erreur:', error);
+                document.getElementById('data-container').innerHTML = `<p>Erreur lors du chargement des données.</p>`;
+            }
+        }
+
+        // Charger les données au démarrage
+        fetchData();
+    </script>
+</body>
+</html>
